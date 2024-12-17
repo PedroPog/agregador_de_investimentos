@@ -1,5 +1,8 @@
 package com.codehive.agregador.controller;
 
+import com.codehive.agregador.controller.dto.CreateAccountDto;
+import com.codehive.agregador.controller.dto.CreateUserDto;
+import com.codehive.agregador.controller.dto.UpdateUserDto;
 import com.codehive.agregador.entity.User;
 import com.codehive.agregador.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +52,12 @@ public class UserController {
     public ResponseEntity<Void> deleteById(@PathVariable("userId") String userID){
         userService.deleteById(userID);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{userId}/accounts")
+    public ResponseEntity<Void> createAccount(@PathVariable("userId") String userId,
+                                           @RequestBody CreateAccountDto createAccountDto){
+        userService.createAccount(userId,createAccountDto);
+        return ResponseEntity.ok().build();
     }
 }

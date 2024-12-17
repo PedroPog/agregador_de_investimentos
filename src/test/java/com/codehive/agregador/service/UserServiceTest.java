@@ -1,7 +1,7 @@
 package com.codehive.agregador.service;
 
-import com.codehive.agregador.controller.CreateUserDto;
-import com.codehive.agregador.controller.UpdateUserDto;
+import com.codehive.agregador.controller.dto.CreateUserDto;
+import com.codehive.agregador.controller.dto.UpdateUserDto;
 import com.codehive.agregador.entity.User;
 import com.codehive.agregador.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
