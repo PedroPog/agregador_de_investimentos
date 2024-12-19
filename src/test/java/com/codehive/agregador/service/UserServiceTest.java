@@ -95,7 +95,7 @@ class UserServiceTest {
             );
             doReturn(Optional.of(user)).when(userRepository).findById(uuidArgumentCaptor.capture());
 
-            var output = userService.getUsuarioById(user.getUserId().toString());
+            var output = userService.getUserById(user.getUserId().toString());
 
             assertTrue(output.isPresent());
             assertEquals(user.getUserId(),uuidArgumentCaptor.getValue());
@@ -109,7 +109,7 @@ class UserServiceTest {
             var userId = UUID.randomUUID();
             doReturn(Optional.empty()).when(userRepository).findById(uuidArgumentCaptor.capture());
 
-            var output = userService.getUsuarioById(userId.toString());
+            var output = userService.getUserById(userId.toString());
 
             assertTrue(output.isEmpty());
             assertEquals(userId,uuidArgumentCaptor.getValue());
@@ -150,7 +150,7 @@ class UserServiceTest {
             var userId = UUID.randomUUID();
             doReturn(Optional.empty()).when(userRepository).findById(uuidArgumentCaptor.capture());
 
-            var output = userService.getUsuarioById(userId.toString());
+            var output = userService.getUserById(userId.toString());
 
             assertTrue(output.isEmpty());
             assertEquals(userId,uuidArgumentCaptor.getValue());
@@ -181,7 +181,7 @@ class UserServiceTest {
             doReturn(Optional.of(user)).when(userRepository).findById(uuidArgumentCaptor.capture());
             doReturn(user).when(userRepository).save(userArgumentCaptor.capture());
 
-            userService.updatedUserById(user.getUserId().toString(),updateUserDto);
+            userService.updateUserById(user.getUserId().toString(),updateUserDto);
 
             assertEquals(user.getUserId(),uuidArgumentCaptor.getValue());
             var userCaptured = userArgumentCaptor.getValue();
@@ -206,7 +206,7 @@ class UserServiceTest {
             var userId = UUID.randomUUID();
             doReturn(Optional.empty()).when(userRepository).findById(uuidArgumentCaptor.capture());
 
-            userService.updatedUserById(userId.toString(),updateUserDto);
+            userService.updateUserById(userId.toString(),updateUserDto);
 
             assertEquals(userId,uuidArgumentCaptor.getValue());
 

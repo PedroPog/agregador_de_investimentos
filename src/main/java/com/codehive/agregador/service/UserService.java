@@ -1,5 +1,6 @@
 package com.codehive.agregador.service;
 
+import com.codehive.agregador.controller.dto.AccountResponseDto;
 import com.codehive.agregador.controller.dto.CreateAccountDto;
 import com.codehive.agregador.controller.dto.CreateUserDto;
 import com.codehive.agregador.controller.dto.UpdateUserDto;
@@ -9,7 +10,6 @@ import com.codehive.agregador.entity.User;
 import com.codehive.agregador.repository.AccountRepository;
 import com.codehive.agregador.repository.BillingAddressRepository;
 import com.codehive.agregador.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,45 +38,61 @@ public class UserService {
         this.billingAddressRepository = billingAddressRepository;
     }
 
+    public UUID createUser(CreateUserDto createUserDto) {
 
-    public UUID createUser(CreateUserDto createUserDto){
+        // DTO -> ENTITY
         var entity = new User(
-                null,
-                createUserDto.username(), createUserDto.email(),
-                createUserDto.password(), Instant.now(),null);
+                UUID.randomUUID(),
+                createUserDto.username(),
+                createUserDto.email(),
+                createUserDto.password(),
+                Instant.now(),
+                null);
 
         var userSaved = userRepository.save(entity);
+
         return userSaved.getUserId();
     }
 
-    public Optional<User> getUsuarioById(String userId){
+    public Optional<User> getUserById(String userId) {
+
         return userRepository.findById(UUID.fromString(userId));
     }
 
-    public List<User> listUsers(){
+    public List<User> listUsers() {
         return userRepository.findAll();
     }
 
-    public void updatedUserById(String userId,
-                                UpdateUserDto updateUserDto){
+    public void updateUserById(String userId,
+                               UpdateUserDto updateUserDto) {
+
         var id = UUID.fromString(userId);
+
         var userEntity = userRepository.findById(id);
-        if(userEntity.isPresent()){
+
+        if (userEntity.isPresent()) {
             var user = userEntity.get();
-            if(updateUserDto.username()!=null){
+
+            if (updateUserDto.username() != null) {
                 user.setUsername(updateUserDto.username());
             }
-            if(updateUserDto.password()!=null){
+
+            if (updateUserDto.password() != null) {
                 user.setPassword(updateUserDto.password());
             }
+
             userRepository.save(user);
         }
+
     }
 
-    public void deleteById(String userId){
+    public void deleteById(String userId) {
+
         var id = UUID.fromString(userId);
+
         var userExists = userRepository.existsById(id);
-        if(userExists){
+
+        if (userExists) {
             userRepository.deleteById(id);
         }
     }
@@ -86,28 +102,47 @@ public class UserService {
         var user = userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não existe"));
 
-        /*if (isNull(user.getAccounts())) {
+        if (isNull(user.getAccounts())) {
             user.setAccounts(new ArrayList<>());
-        }*/
+        }
 
         // DTO -> ENTITY
         var account = new Account(
-                UUID.randomUUID(),
-                user,
-                null,
-                createAccountDto.description(),
-                new ArrayList<>()
+            UUID.randomUUID(),
+            user,
+            null,
+            createAccountDto.description(),
+            new ArrayList<>()
         );
 
         var accountCreated = accountRepositoy.save(account);
 
         var billingAddress = new BillingAddress(
                 accountCreated.getAccountId(),
-                account,
+                accountCreated,
                 createAccountDto.street(),
                 createAccountDto.number()
         );
 
         billingAddressRepository.save(billingAddress);
+    }
+
+    public List<Account> findAccounts(String userId) {
+        var user = userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não existe"));
+
+        return user.getAccounts();
+    }
+
+    public List<AccountResponseDto> listAccounts(String userId) {
+
+        var user = userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não existe"));
+
+        return user.getAccounts()
+                .stream()
+                .map(ac -> new AccountResponseDto(ac.getAccountId().toString(),ac.getDescription()))
+                .toList();
+
     }
 }

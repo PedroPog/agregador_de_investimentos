@@ -11,7 +11,7 @@ public class Stock {
 
     @Id
     @Column(name = "stock_id")
-    private String stockId; //MGLU4
+    private String stockId;
 
     @Column(name = "description")
     private String description;

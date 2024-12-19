@@ -1,6 +1,5 @@
 package com.codehive.agregador.entity;
 
-
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -42,6 +41,14 @@ public class BillingAddress {
         this.id = id;
     }
 
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
     public String getStreet() {
         return street;
     }
@@ -57,6 +64,4 @@ public class BillingAddress {
     public void setNumber(Integer number) {
         this.number = number;
     }
-
-
 }

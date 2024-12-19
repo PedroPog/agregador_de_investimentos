@@ -1,7 +1,6 @@
 package com.codehive.agregador.entity;
 
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,14 +27,9 @@ public class Account {
     private String description;
 
     @OneToMany(mappedBy = "account")
-    private List<AccountStock> accountStocks;
+    private List<AccountStock> accountStocks = new ArrayList<>();
 
     public Account() {
-    }
-
-    public Account(UUID accountId, String description) {
-        this.accountId = accountId;
-        this.description = description;
     }
 
     public Account(UUID accountId, User user, BillingAddress billingAddress, String description, List<AccountStock> accountStocks) {
@@ -85,4 +79,7 @@ public class Account {
     public void setAccountStocks(List<AccountStock> accountStocks) {
         this.accountStocks = accountStocks;
     }
+
+
+
 }
