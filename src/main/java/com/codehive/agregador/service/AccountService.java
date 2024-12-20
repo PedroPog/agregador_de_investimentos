@@ -41,7 +41,7 @@ public class AccountService {
     public void associateStock(String accountId, AssociateAccountStockDto dto) {
         var account = accountRepository.findById(UUID.fromString(accountId))
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
-        var stock = stockRepository.findById(dto.stockId())
+        var stock = stockRepository.findById(dto.getStockId())
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         var id = new AccountStockId(account.getAccountId(),stock.getStockId());
@@ -49,7 +49,7 @@ public class AccountService {
                 id,
                 account,
                 stock,
-                dto.quantity()
+                dto.getQuantity()
         );
 
         accountStockRepository.save(entity);
@@ -67,8 +67,8 @@ public class AccountService {
                     return new AccountStockResponseDto(
                             as.getStock().getStockId(),
                             as.getQuantity(),
-                            stockDto.regularMarketPrice(),
-                            stockDto.logourl()
+                            stockDto.getRegularMarketPrice(),
+                            stockDto.getLogourl()
                     );
                 })
                 .toList();
@@ -83,11 +83,10 @@ public class AccountService {
 
     private StockDto getTotal(int quantity, String stockId) {
         var response = brapiClient.getQuote(TOKEN,stockId);
-        var price = response.results()
-                .getFirst().regularMarketPrice();
+        var price = response.getResults().get(0).getRegularMarketPrice();
         return new StockDto(
-                quantity *price,
-                response.results().getFirst().logourl()
+                quantity * price,
+                response.getResults().get(0).getLogourl()
         );
     }
 }

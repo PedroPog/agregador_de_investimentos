@@ -43,9 +43,9 @@ public class UserService {
         // DTO -> ENTITY
         var entity = new User(
                 UUID.randomUUID(),
-                createUserDto.username(),
-                createUserDto.email(),
-                createUserDto.password(),
+                createUserDto.getUsername(),
+                createUserDto.getEmail(),
+                createUserDto.getPassword(),
                 Instant.now(),
                 null);
 
@@ -73,12 +73,12 @@ public class UserService {
         if (userEntity.isPresent()) {
             var user = userEntity.get();
 
-            if (updateUserDto.username() != null) {
-                user.setUsername(updateUserDto.username());
+            if (updateUserDto.getUsername() != null) {
+                user.setUsername(updateUserDto.getUsername());
             }
 
-            if (updateUserDto.password() != null) {
-                user.setPassword(updateUserDto.password());
+            if (updateUserDto.getPassword() != null) {
+                user.setPassword(updateUserDto.getPassword());
             }
 
             userRepository.save(user);
@@ -111,7 +111,7 @@ public class UserService {
             UUID.randomUUID(),
             user,
             null,
-            createAccountDto.description(),
+            createAccountDto.getDescription(),
             new ArrayList<>()
         );
 
@@ -120,8 +120,8 @@ public class UserService {
         var billingAddress = new BillingAddress(
                 accountCreated.getAccountId(),
                 accountCreated,
-                createAccountDto.street(),
-                createAccountDto.number()
+                createAccountDto.getStreet(),
+                createAccountDto.getNumber()
         );
 
         billingAddressRepository.save(billingAddress);

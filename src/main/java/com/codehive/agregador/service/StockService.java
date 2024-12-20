@@ -14,8 +14,8 @@ public class StockService {
 
     public void createStock(CreateStockDto createStockDto) {
         var stock = new Stock(
-                createStockDto.stockId(),
-                createStockDto.description()
+                createStockDto.getStockId(),
+                createStockDto.getDescription()
         );
         stockRepository.save(stock);
     }
